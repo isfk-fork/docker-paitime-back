@@ -1,0 +1,85 @@
+version: "3"
+
+services:
+  # database
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 9EY449gpWPR7aGc7
+    ports:
+      - '33306:3306'
+    volumes:
+      - ./mysql:/etc/mysql/mysql.conf.d
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./data/mysql:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: 9EY449gpWPR7aGc7
+    links:
+      - mysql:mysql
+    ports:
+      - 38081:80
+
+  redis:
+    image: redis
+    container_name: redis
+    command: redis-server --requirepass ptcnptcn
+    ports:
+      - '36379:6379'
+    volumes:
+      - ./data/redis:/data
+
+  # loki
+  loki:
+    image: grafana/loki
+    volumes:
+      - ./log/grafana:/var/log
+    ports:
+      - "33100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail
+    volumes:
+      - /var/log:/var/log
+      - ./promtail/tmp:/tmp
+      - ./promtail/config:/etc/promtail
+    command: -config.file=/etc/promtail/docker-config.yaml
+    ports:
+      - "39080:9080"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "33000:3000"
+
+  # gateway
+  gateway:
+    image: micro/micro
+    command: api --handler=api --namespace=cn.paitime.api
+    ports:
+      - '38080:8080'
+
+  # srv & api
+  user-srv:
+    build: ./go13
+    container_name: user-srv
+    command: bash -c "syslogd && make build && make run"
+    volumes:
+      - ../user-srv:/go/src/myapp
+      - /var/log:/var/log
+
+  user-api:
+    container_name: user-api
+    build: ./go13
+    command: bash -c "syslogd && make build && make run"
+    volumes:
+      - ../user-api:/go/src/myapp
+      - /var/log:/var/log
