@@ -49,7 +49,7 @@ services:
     image: grafana/promtail
     volumes:
       - /var/log:/var/log
-      - ./promtail/tmp:/tmp
+      - ./log/promtail/tmp:/tmp
       - ./promtail/config:/etc/promtail
     command: -config.file=/etc/promtail/docker-config.yaml
     ports:
