@@ -45,6 +45,23 @@ services:
       - "33100:3100"
     command: -config.file=/etc/loki/local-config.yaml
 
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./data/prometheus:/prometheus/data
+      - ./log/prometheus:/var/log
+      - ./prometheus:/etc/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "39090:9090"
+
+  nodeexporter:
+    image: prom/node-exporter
+    volumes:
+      - ./log/node-exporter:/var/log
+    ports:
+      - "39100:9100"
+
   promtail:
     image: grafana/promtail
     volumes:
@@ -62,10 +79,13 @@ services:
 
   # gateway
   gateway:
-    image: micro/micro
-    command: api --handler=api --namespace=cn.paitime.api
+    build: ./go13
+    container_name: gateway
+    command: bash -c "syslogd && make build && make run"
+    volumes:
+      - ../gateway:/go/src/myapp
     ports:
-      - '38080:8080'
+      - "38080:8080"
 
   # srv & api
   user-srv:
@@ -83,3 +103,13 @@ services:
     volumes:
       - ../user-api:/go/src/myapp
       - /var/log:/var/log
+
+  test:
+    container_name: test
+    build: ./go13
+    command: bash -c "syslogd && make build && make run"
+    volumes:
+      - ../test:/go/src/myapp
+      - /var/log:/var/log
+    ports:
+      - "32112:2112"
