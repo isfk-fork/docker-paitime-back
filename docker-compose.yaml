@@ -37,15 +37,15 @@ services:
       - ./data/redis:/data
 
   # etcd
-  etcd:
-    image: quay.io/coreos/etcd:v3.3.18
-    container_name: etcd
-    command: /usr/local/bin/etcd --name s1 --data-dir /etcd-data --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://0.0.0.0:2379 --listen-peer-urls http://0.0.0.0:2380 --initial-advertise-peer-urls http://0.0.0.0:2380 --initial-cluster s1=http://0.0.0.0:2380
-    volumes:
-      - ./data/etcd:/etcd-data
-    ports:
-      - "32379:2379"
-      - "32380:2380"
+  # etcd:
+  #   image: quay.io/coreos/etcd:v3.3.18
+  #   container_name: etcd
+  #   command: /usr/local/bin/etcd --name s1 --data-dir /etcd-data --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://0.0.0.0:2379 --listen-peer-urls http://0.0.0.0:2380 --initial-advertise-peer-urls http://0.0.0.0:2380 --initial-cluster s1=http://0.0.0.0:2380
+  #   volumes:
+  #     - ./data/etcd:/etcd-data
+  #   ports:
+  #     - "32379:2379"
+  #     - "32380:2380"
 
   # consul
   consul:
