@@ -36,6 +36,18 @@ services:
     volumes:
       - ./data/redis:/data
 
+  # etcd
+  etcd:
+    image: quay.io/coreos/etcd:v3.3.18
+    container_name: etcd
+    command: /usr/local/bin/etcd --name s1 --data-dir /etcd-data --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://0.0.0.0:2379 --listen-peer-urls http://0.0.0.0:2380 --initial-advertise-peer-urls http://0.0.0.0:2380 --initial-cluster s1=http://0.0.0.0:2380
+
+    volumes:
+      - ./data/etcd:/etcd-data
+    ports:
+      - "32379:2379"
+      - "32380:2380"
+
   # loki
   loki:
     image: grafana/loki
@@ -45,6 +57,7 @@ services:
       - "33100:3100"
     command: -config.file=/etc/loki/local-config.yaml
 
+  # prometheus
   prometheus:
     image: prom/prometheus
     volumes:
@@ -55,13 +68,14 @@ services:
     ports:
       - "39090:9090"
 
-  nodeexporter:
-    image: prom/node-exporter
-    volumes:
-      - ./log/node-exporter:/var/log
-    ports:
-      - "39100:9100"
+  # nodeexporter:
+  #   image: prom/node-exporter
+  #   volumes:
+  #     - ./log/node-exporter:/var/log
+  #   ports:
+  #     - "39100:9100"
 
+  # promtail
   promtail:
     image: grafana/promtail
     volumes:
@@ -71,7 +85,8 @@ services:
     command: -config.file=/etc/promtail/docker-config.yaml
     ports:
       - "39080:9080"
-
+  
+  # grafana
   grafana:
     image: grafana/grafana
     ports:
