@@ -47,6 +47,24 @@ services:
       - "32379:2379"
       - "32380:2380"
 
+  # consul
+  consul:
+    build: ./consul
+    container_name: consul
+    ports:
+      - '38500:8500'
+    volumes:
+      - ./data/consul:/vault
+
+  # vault
+  vault:
+    build: ./vault
+    container_name: vault
+    ports:
+      - '38200:8200'
+    volumes:
+      - ./data/vault/file:/vault/file
+      - ./data/vault/logs:/vault/logs
   # loki
   loki:
     image: grafana/loki
