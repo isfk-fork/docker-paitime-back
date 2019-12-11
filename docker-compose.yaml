@@ -103,13 +103,3 @@ services:
     volumes:
       - ../user-api:/go/src/myapp
       - /var/log:/var/log
-
-  test:
-    container_name: test
-    build: ./go13
-    command: bash -c "syslogd && make build && make run"
-    volumes:
-      - ../test:/go/src/myapp
-      - /var/log:/var/log
-    ports:
-      - "32112:2112"
