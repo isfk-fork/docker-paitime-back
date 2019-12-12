@@ -39,3 +39,7 @@ scrape_configs:
       - targets: ['vault:8200']
         labels:
           group: 'vault'
+
+  - job_name: 'consul'
+    consul_sd_configs:
+      - server: 'consul:8500'
