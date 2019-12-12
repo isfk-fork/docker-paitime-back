@@ -28,3 +28,14 @@ scrape_configs:
       - targets: ['gateway:8080']
         labels:
           group: 'micro'
+
+  - job_name: 'vault'
+    scrape_interval: 5s
+    metrics_path: /v1/sys/metrics
+    params:
+      format: ['prometheus']
+    bearer_token: 's.fCNf0elpJCNiy9poFFQiFgDQ'
+    static_configs:
+      - targets: ['vault:8200']
+        labels:
+          group: 'vault'

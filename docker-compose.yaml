@@ -54,17 +54,23 @@ services:
     ports:
       - '38500:8500'
     volumes:
-      - ./data/consul:/vault
+      - ./data/consul:/consul/data
 
   # vault
   vault:
     build: ./vault
     container_name: vault
+    environment: 
+      VAULT_ADDR: http://127.0.0.1:8200
+    command: vault server -config=/vault/config/config.hcl
+    cap_add: 
+      - IPC_LOCK 
     ports:
       - '38200:8200'
     volumes:
       - ./data/vault/file:/vault/file
       - ./data/vault/logs:/vault/logs
+  
   # loki
   loki:
     image: grafana/loki
