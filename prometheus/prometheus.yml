@@ -19,9 +19,10 @@ rule_files:
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
-#   - job_name: 'prometheus'
-#     static_configs:
-#         - targets: ['localhost:9090']
+  - job_name: 'prometheus'
+    static_configs:
+        - targets: ['localhost:9090']
+
   - job_name: 'micro'
     scrape_interval: 5s
     static_configs:
@@ -34,12 +35,20 @@ scrape_configs:
     metrics_path: /v1/sys/metrics
     params:
       format: ['prometheus']
-    bearer_token: 's.fCNf0elpJCNiy9poFFQiFgDQ'
+    bearer_token: 's.6Q6pCIG7WyvLiALPLFFl4uJw'
     static_configs:
       - targets: ['vault:8200']
         labels:
           group: 'vault'
 
   - job_name: 'consul'
+    scrape_interval: 5s
     consul_sd_configs:
       - server: 'consul:8500'
+        services:
+          ['cn.paitime.srv.user','cn.paitime.api.user','go.micro.api']
+    # relabel_configs:
+    # - source_labels: ['__meta_consul_dc']
+    #   target_label: 'dc'
+    # - source_labels: ['__meta_consul_service']
+    #   target_label: 'service'

@@ -49,16 +49,20 @@ services:
 
   # consul
   consul:
-    build: ./consul
+    image: consul:latest
     container_name: consul
+    environment: 
+      CONSUL_HTTP_ADDR: 127.0.0.1:8500
+    command: consul agent -config-file=/consul/config
     ports:
       - '38500:8500'
     volumes:
+      - ./consul:/consul/config
       - ./data/consul:/consul/data
 
   # vault
   vault:
-    build: ./vault
+    image: vault:latest
     container_name: vault
     environment: 
       VAULT_ADDR: http://127.0.0.1:8200
@@ -68,6 +72,7 @@ services:
     ports:
       - '38200:8200'
     volumes:
+      - ./vault:/vault/config
       - ./data/vault/file:/vault/file
       - ./data/vault/logs:/vault/logs
   
