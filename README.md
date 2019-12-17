@@ -14,11 +14,14 @@ vault operator init
 
 > 记录下输出结果 5个解密key 一个 vault token
 
-## 3. 创建 `.env` 文件
+## 3. 创建配置文件
 
+1. `.env` 文件
 ```
 VAULT_TOKEN=${vault token}
 ```
+2. `vault_token` 文件
+创建 `prometheus/vault_token` 文件，填充 `${vault token}`
 
 ## 4. 打开 `http://localhost:38200` 进行 `vault` 解封，并进行配置
 
