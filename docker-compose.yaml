@@ -125,6 +125,8 @@ services:
     build: ./go13
     container_name: gateway
     command: bash -c "syslogd && make build && make run"
+    environment: 
+      VAULT_TOKEN: ${VAULT_TOKEN}
     volumes:
       - ../gateway:/go/src/myapp
     ports:
@@ -135,6 +137,8 @@ services:
     build: ./go13
     container_name: user-srv
     command: bash -c "syslogd && make build && make run"
+    environment: 
+      VAULT_TOKEN: ${VAULT_TOKEN}
     volumes:
       - ../user-srv:/go/src/myapp
       - /var/log:/var/log
@@ -143,6 +147,8 @@ services:
     container_name: user-api
     build: ./go13
     command: bash -c "syslogd && make build && make run"
+    environment: 
+      VAULT_TOKEN: ${VAULT_TOKEN}
     volumes:
       - ../user-api:/go/src/myapp
       - /var/log:/var/log
