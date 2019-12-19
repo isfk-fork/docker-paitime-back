@@ -25,7 +25,7 @@ services:
     links:
       - mysql:mysql
     ports:
-      - 38081:80
+      - 38000:80
 
   redis:
     image: redis
@@ -121,16 +121,27 @@ services:
       - "33000:3000"
 
   # gateway
-  gateway:
+  gateway-api:
     build: ./go13
-    container_name: gateway
-    command: bash -c "syslogd && make build && make run"
+    container_name: gateway-api
+    command: bash -c "syslogd && make build && make run-api"
     environment: 
       VAULT_TOKEN: ${VAULT_TOKEN}
     volumes:
       - ../gateway:/go/src/myapp
     ports:
       - "38080:8080"
+  
+  gateway-web:
+    build: ./go13
+    container_name: gateway-web
+    command: bash -c "syslogd && make build && make run-web"
+    environment: 
+      VAULT_TOKEN: ${VAULT_TOKEN}
+    volumes:
+      - ../gateway:/go/src/myapp
+    ports:
+      - "38081:8080"
 
   # srv & api
   user-srv:

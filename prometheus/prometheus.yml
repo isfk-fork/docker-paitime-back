@@ -23,12 +23,19 @@ scrape_configs:
     static_configs:
         - targets: ['localhost:9090']
 
-  - job_name: 'micro'
+  - job_name: 'gateway-api'
     scrape_interval: 5s
     static_configs:
-      - targets: ['gateway:8080']
+      - targets: ['gateway-api:8080']
         labels:
-          group: 'micro'
+          group: 'gateway-api'
+  
+  - job_name: 'gateway-web'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['gateway-web:8080']
+        labels:
+          group: 'gateway-web'
 
   - job_name: 'vault'
     scrape_interval: 5s
@@ -46,7 +53,12 @@ scrape_configs:
     consul_sd_configs:
       - server: 'consul:8500'
         services:
-          ['cn.paitime.srv.user','cn.paitime.api.user','go.micro.api']
+          [
+            'cn.paitime.srv.user',
+            'cn.paitime.api.user',
+            'go.micro.api',
+            'go.micro.web'
+          ]
     relabel_configs:
     - source_labels: ['__meta_consul_dc']
       target_label: 'dc'
