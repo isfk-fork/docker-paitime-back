@@ -150,6 +150,7 @@ services:
     command: bash -c "syslogd && make build && make run"
     environment: 
       VAULT_TOKEN: ${VAULT_TOKEN}
+      PROMETHEUS_ADDR: user-srv:8088
     volumes:
       - ../user-srv:/go/src/myapp
       - /var/log:/var/log
@@ -160,6 +161,7 @@ services:
     command: bash -c "syslogd && make build && make run"
     environment: 
       VAULT_TOKEN: ${VAULT_TOKEN}
+      PROMETHEUS_ADDR: user-api:8088
     volumes:
       - ../user-api:/go/src/myapp
       - /var/log:/var/log
